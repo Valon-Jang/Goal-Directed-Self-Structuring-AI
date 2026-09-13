@@ -13,14 +13,15 @@ Self-study must remain honestly labelled: the researcher is not an independent e
 - E001 E0: 36 original instrumentation tests; no model comparison.
 - E001 E0.1: 15 completed actual Qwen3-0.6B calls, 3 developmental task episodes, 0/3 accepted. See evidence/E001/E01_RESULT.json and experiments/E001/E01_FINDINGS.md.
 - E002: current-assistant open-label artifact transfer study; 96 post-freeze case instances x 3 SOFTWARE conditions = 288 invocations. Adapted reuse: 72 correct completed outputs, 24 correct ambiguity blocks, zero silent errors. All 95 regression tests passed. See evidence/E002/RESULT.json and FINDINGS.md. Main source frozen at 5fd5052b7aa30cc979775d78d5f994734f4fbbca; remote run 34758574472.
+- E003: 12 precommitted current-assistant structural choices plus one source-read follow-up, in one self-authored open-label session. Ten correct business outputs, two appropriate pending fact/authority questions, no observed incorrect handling. Six negative substitutions rejected; all 111 regression tests passed. Same choices and exact outputs reproduced on GitHub run 34760340461 at source 66e47a77245e82f49093d5106f8469b8018a92a7. See evidence/E003/RESULT.json and FINDINGS.md. Information-loss counterexamples distinguish output adaptation, upstream recomputation and missing authority; they do not establish model superiority or general minimality.
 
-Never compare E001's 0/3 model episodes with E002's 72/72 resolvable artifact instances as a model ranking or intelligence gain. E002's same-seed local replay is a reproducibility check, not another independent study.
+Never compare E001's 0/3 model episodes with E002's 72/72 resolvable artifact instances as a model ranking or intelligence gain. E002's same-seed local replay is a reproducibility check, not another independent study. E003's hosted replay is likewise not another set of model decisions; two pending cases are not completed work.
 
 ## Active research route
 
-Branch: research/e002-assistant-transfer-v01, built on the E001 research branch. The original theory and E001 code/results are preserved. Main is not automatically promoted. RESEARCH_CHARTER.md supplies the north star; this index supersedes its historical E0.1-only next-action paragraph, not its safety/evidence rules.
+Branch: research/e003-structural-judgment-v01, built on the E002 and E001 research branches. The original theory and E001/E002 code/results are preserved. Main is not automatically promoted. RESEARCH_CHARTER.md supplies the north star; this index supersedes its historical E0.1-only next-action paragraph, not its safety/evidence rules.
 
-Current next candidate: E003 intervention-selection study — can the assistant determine whether to reuse, minimally adapt, replace or ask for missing authority from the goal and evidence, rather than being assigned the correct method? Read evidence/E002/FINDINGS.md before designing the task/evaluator separation. This next study is PLANNED, not executed.
+Current next candidate: E004 authority/information-sufficiency judgment under misleading or conflicting descriptions. Start with evidence/E003/FINDINGS.md, then select a bounded test that improves case-author/subject separation where an actual authorized runtime permits it. Study whether the assistant finds the relevant information and changes only what is warranted, rather than trusting a convenient schema label or declining every unfamiliar case. This next study is PLANNED, not executed. Do not install a mandatory chain of reasoning to force the preferred answer.
 
 Still pending independently: E001-E0.2's 24 diagnostic model trajectories; authentic human method provenance and whole-human-time collection; the 216-trajectory primary BARE-GOAL/HUMAN-GUIDED pilot. No completed result may be inferred for those lanes.
 
@@ -28,6 +29,6 @@ Still pending independently: E001-E0.2's 24 diagnostic model trajectories; authe
 
 Researcher workflow: retrieve current evidence -> pick one consequential uncertainty -> freeze a fair bounded test -> execute within real capabilities -> preserve negative results and limitations -> update this entry point. No unattended loop or scheduled work has been installed. No extra user testing should be requested when the available tools can resolve the question directly.
 
-The public repository contains generic code and synthetic evidence only. A persistent original evidence ZIP is kept in the owner's project Drive with a verified checksum; private routing is not published. No private repository, customer, company or credential data is eligible for public copy.
+The public repository contains generic code and synthetic evidence only. Persistent original E002 and E003 evidence ZIPs are kept in the owner's project Drive with verified checksums; private routing is not published. No private repository, customer, company or credential data is eligible for public copy.
 
 Before repeating connector operations, consult docs/OPERATIONAL_NOTES.md for exact failures and supported alternatives. Before applying any artifact in operational work, verify its declared scope and current evidence; research PASS is not production deployment approval.
