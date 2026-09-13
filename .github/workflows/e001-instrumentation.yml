@@ -1,0 +1,69 @@
+name: E001 instrumentation only
+on:
+  push:
+    branches: [research/e001-goal-vs-human-v01]
+    paths:
+      - 'implementations/e001_harness.py'
+      - 'benchmarks/e001_tasks.py'
+      - 'tests/test_e001.py'
+      - '.github/workflows/e001-instrumentation.yml'
+  pull_request:
+    paths:
+      - 'implementations/e001_harness.py'
+      - 'benchmarks/e001_tasks.py'
+      - 'tests/test_e001.py'
+      - '.github/workflows/e001-instrumentation.yml'
+permissions:
+  contents: read
+jobs:
+  instrumentation:
+    if: github.repository == 'Valon-Jang/Goal-Directed-Self-Structuring-AI'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact public source without credentials or third-party actions
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin https://github.com/Valon-Jang/Goal-Directed-Self-Structuring-AI.git
+          git fetch --depth=1 origin "$TEST_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Run E0 and print machine-readable evidence
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import datetime, hashlib, io, json, os, pathlib, platform, time, unittest
+          started = time.perf_counter()
+          suite = unittest.defaultTestLoader.discover('tests')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          paths = ['implementations/e001_harness.py', 'benchmarks/e001_tasks.py', 'tests/test_e001.py', '.github/workflows/e001-instrumentation.yml']
+          report = {
+            'schema': 'GDSSA_E001_E0_V1',
+            'evidence_class': 'INSTRUMENTATION_ONLY',
+            'status': 'PASS' if result.wasSuccessful() else 'FAIL',
+            'timestamp_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'commit': os.environ['TEST_SHA'],
+            'python': platform.python_version(),
+            'sqlite': __import__('sqlite3').sqlite_version,
+            'tests_run': result.testsRun,
+            'failures': len(result.failures), 'errors': len(result.errors),
+            'skipped': len(result.skipped),
+            'reference_fixture_episodes': 48 if result.wasSuccessful() else None,
+            'reference_capsule_transfer_checks': 12 if result.wasSuccessful() else None,
+            'real_model_calls': 0,
+            'primary_model_trials_completed': 0,
+            'human_authored_guides_observed': 0,
+            'human_total_active_seconds': None,
+            'model_inference_cost_usd': None,
+            'test_wall_seconds': time.perf_counter()-started,
+            'source_sha256': {p: hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in paths},
+            'claim': 'Tests verify instrumentation, not BARE-GOAL/HUMAN-GUIDED efficacy or business ROI.'
+          }
+          print('E001_REPORT_BEGIN')
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          print('E001_REPORT_END')
+          pathlib.Path('e0_report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+          raise SystemExit(0 if result.wasSuccessful() else 1)
+          PY
