@@ -1,0 +1,93 @@
+name: E003 structural decisions
+on:
+  push:
+    branches: [research/e003-structural-decisions-v01]
+    paths: ['.github/workflows/e003-structural-decisions.yml']
+permissions:
+  contents: read
+jobs:
+  structural:
+    if: github.repository == 'Valon-Jang/Goal-Directed-Self-Structuring-AI'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact public research commit
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin https://github.com/Valon-Jang/Goal-Directed-Self-Structuring-AI.git
+          git fetch --depth=1 origin "$TEST_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Verify source pins and all software-control tests
+        run: |
+          mkdir e003-run
+          python3 - <<'PY'
+          import hashlib,json,pathlib,unittest
+          f=json.loads(pathlib.Path('evidence/E003/FREEZE.json').read_text())
+          for name in ['experiments/E003/study.py','tests/test_e003.py']:
+              assert hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest()==f['files'][name],name
+          assert hashlib.sha256(pathlib.Path('experiments/E002/capability.py').read_bytes()).hexdigest()==f['inherited_capability_sha256']
+          r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('tests'))
+          result={'tests_run':r.testsRun,'failures':len(r.failures),'errors':len(r.errors),'skipped':len(r.skipped),'primary_case_evaluations_in_preflight':0}
+          pathlib.Path('e003-run/tests.json').write_text(json.dumps(result,indent=2))
+          print('E003_TESTS',json.dumps(result))
+          assert r.testsRun>=111 and r.wasSuccessful()
+          PY
+      - name: Materialize committed input and decision bytes
+        run: |
+          python3 -m experiments.E003.study generate --seed 3502872110485866510 --folder e003-run
+          python3 - <<'PY'
+          import hashlib,json,pathlib,shutil
+          from experiments.E003.study import load,write,sha,read_selected
+          root=pathlib.Path('e003-run')
+          freeze=load('evidence/E003/FREEZE.json')
+          for name,expected in freeze['files'].items():
+              p=root/pathlib.Path(name).name if name.startswith('evidence/E003/') else pathlib.Path(name)
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==expected,name
+          initial=load('evidence/E003/decisions_initial.json')
+          completion=load('evidence/E003/DECISION_COMPLETION.json')
+          reads=read_selected(load(root/'cases.json'),initial,load(root/'documents.json'))
+          assert reads==completion['evidence_reads']
+          patch=completion['completion']
+          assert set(patch)=={'case_id','operation','basis'}
+          assert sum(d['case_id']==patch['case_id'] for d in initial)==1
+          final=[]
+          for d in initial:
+              item=dict(d)
+              if d['case_id']==patch['case_id']:
+                  assert d['information_action']=='READ_DOCUMENT'
+                  item.update(patch)
+              final.append(item)
+          assert sha(final)==completion['final_decisions_content_sha256']
+          write(root/'decisions_final.json',final)
+          assert hashlib.sha256((root/'decisions_final.json').read_bytes()).hexdigest()==completion['final_decisions_file_sha256']
+          write(root/'reads.json',reads)
+          shutil.copy('evidence/E003/decisions_initial.json',root/'decisions_initial.json')
+          shutil.copy('evidence/E003/FREEZE.json',root/'FREEZE.json')
+          shutil.copy('evidence/E003/DECISION_COMPLETION.json',root/'DECISION_COMPLETION.json')
+          print('E003_FREEZE_INPUT_DECISIONS_AND_READS MATCH')
+          PY
+      - name: Execute choices and report outcomes without changing them
+        run: |
+          python3 -m experiments.E003.study evaluate --folder e003-run
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,platform,shutil,sqlite3
+          p=pathlib.Path('e003-run')
+          source=p/'source';source.mkdir()
+          for src in ['experiments/E003/study.py','experiments/E003/PROTOCOL.md','tests/test_e003.py','experiments/E002/capability.py']:
+              dest=source/src;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy(src,dest)
+          result=json.loads((p/'result.json').read_text())
+          v={'source_commit':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'python':platform.python_version(),'sqlite':sqlite3.sqlite_version,'all_input_source_and_decision_pins_matched':True,'new_model_api_calls':0,'independent_model_samples':0,'same_assistant_choices_in_one_context':12,'summary':result['summary'],'stable_records_sha256':result['stable_records_sha256'],'file_sha256':{str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(p.rglob('*')) if f.is_file()}}
+          (p/'verification.json').write_text(json.dumps(v,indent=2))
+          print('E003_VERIFICATION',json.dumps(v))
+          print('E003_STATUS OBSERVED; workflow completion is not a model-promotion verdict')
+          PY
+      - name: Preserve full synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: e003-evidence-${{ github.run_id }}
+          path: e003-run/
+          if-no-files-found: error
+          retention-days: 90

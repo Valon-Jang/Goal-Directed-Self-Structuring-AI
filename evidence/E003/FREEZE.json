@@ -1,0 +1,19 @@
+{
+  "stage": "INPUT_AND_EXECUTOR_FREEZE_BEFORE_DECISIONS",
+  "protocol_commit": "4ea9d182cca88c9f5fc1a47c813991164c977b30",
+  "generation": {"case_count": 12, "seed": 3502872110485866510},
+  "files": {
+    "experiments/E003/study.py": "f5aede986818807904db461c79e60af2e2c2dea61adaca6f15c16373fefe4eb4",
+    "tests/test_e003.py": "52fd0c0ae3b9a902bafb54543b5c7dc422e3953ce068f9da1cbac10cc2bcc9e6",
+    "evidence/E003/cases.json": "c55f5bda1cc0d228b8ebbe1c8236a0d4f8291edaad98050bd013d7ce69d72fe8",
+    "evidence/E003/documents.json": "bc3bdb1bc3d00c9e9c41cde18c572187f859474f98a120a2a8d8c8f44d95211b",
+    "evidence/E003/pairs.json": "0a1418c590ed95d0be6e4f2c5eed286db8c8065cd2c7e390e46572b7a4f36d64",
+    "evidence/E003/generation.json": "ec1bda1d92cef949db12e0598f48da79327849eda8eec2877a38af4d493b3025"
+  },
+  "inherited_capability_sha256": "c805556842624ee18b306ae8561a559777f1cea401524118cc277cde19dd645e",
+  "primary_slice_evaluated": false,
+  "primary_cases_already_inspected": true,
+  "evaluator_author": "same assistant; open-label; not independent",
+  "input_preservation": "Input files were generated locally once and are committed here by exact source generator, seed and file hashes. Reconstruct with python -m experiments.E003.study generate --seed 3502872110485866510. Full synthetic input bytes will also be preserved in the run evidence. Case inspection occurred before this remote freeze; no primary choices or outcomes had yet been recorded.",
+  "software_preflight": {"new_tests_passed":16,"failures":0,"errors":0,"primary_case_evaluations":0}
+}
