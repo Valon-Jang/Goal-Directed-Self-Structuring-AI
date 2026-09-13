@@ -1,0 +1,17 @@
+{
+  "provenance_kind": null,
+  "author_id": null,
+  "author_relevant_experience": null,
+  "no_ai_composition": null,
+  "task_family": null,
+  "method_text": "",
+  "method_sha256": null,
+  "development_material_sha256": null,
+  "preparation_active_seconds": null,
+  "timer_method": "active_start_pause_stop",
+  "timing_evidence_sha256": null,
+  "heldout_unseen": null,
+  "competence_review": null,
+  "fact_parity_review": null,
+  "notice": "An actual human must supply the method and measured preparation record. AI must not fill this by role-playing a human. Use HUMAN_AUTHORED only for genuine independently human-written methods; AI-PROCEDURAL-PROXY and HUMAN-APPROVED-AI-PLAN are separate conditions, not primary HUMAN-GUIDED evidence. Use pseudonyms and keep personal participant records private."
+}

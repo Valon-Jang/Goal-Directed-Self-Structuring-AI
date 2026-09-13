@@ -1,0 +1,38 @@
+{
+  "schema": "GDSSA_E001_E0_V1",
+  "evidence_class": "INSTRUMENTATION_ONLY",
+  "status": "PASS",
+  "timestamp_utc": "2026-09-13T11:55:28.188634+00:00",
+  "tested_commit": "54fcd6977c73b34c2e400c57cdce45386f2ab46b",
+  "workflow_run_id": 34755692760,
+  "workflow_job_id": 103719558829,
+  "workflow_url": "https://github.com/Valon-Jang/Goal-Directed-Self-Structuring-AI/actions/runs/34755692760",
+  "verification": "Run status, completed job and decoded job logs were read through the GitHub connector before saving this record.",
+  "python": "3.12.3",
+  "sqlite": "3.45.1",
+  "tests_run": 36,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "reference_fixture_episodes": 48,
+  "reference_capsule_transfer_checks": 12,
+  "real_model_calls": 0,
+  "primary_model_trials_completed": 0,
+  "human_authored_guides_observed": 0,
+  "human_total_active_seconds": null,
+  "model_inference_cost_usd": null,
+  "test_wall_seconds": 0.08803888200000642,
+  "source_sha256": {
+    "implementations/e001_harness.py": "697b1442b3b5829eff661ca2747611d5ad1bd81e766155fecae74ffe67d6a15b",
+    "benchmarks/e001_tasks.py": "0ccbd9f379b394e700c66a675f7bf2b76b57bab2d6c037688d69980d6876b04c",
+    "tests/test_e001.py": "41c43772509798863cdb273bd42d510bd2477762cc22cbd5194a6d7796ac0c9e",
+    ".github/workflows/e001-instrumentation.yml": "06a58d281f795ed1d516f4fac2876ddcf4670455dd4cd4eb144296156891fd32"
+  },
+  "claim": "Specific instrumentation checks passed. This is not a BARE-GOAL/HUMAN-GUIDED efficacy comparison, a real-model capability-reuse result or business ROI evidence.",
+  "limitations": [
+    "Reference fixture solvers and scripted human-fact services are not human or AI study participants.",
+    "Public synthetic fixtures are development material, not sealed held-out tasks.",
+    "The callback seam is exploratory and cannot enforce a preemptive live-provider timeout or spend cap by itself.",
+    "No genuine human method plans, measured full human-time ledgers or actual model inference traces were collected."
+  ]
+}
