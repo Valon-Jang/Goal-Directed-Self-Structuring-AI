@@ -1,0 +1,13 @@
+{
+  "schema": "GDSSA_E003_EXECUTION_FREEZE_V1",
+  "initial_choice_commit": "2fdf5e436ec7084e7ccfb49447cabf7d36f50a5a",
+  "followup_choice_commit": "06f2dd51e5e6c6e36b896d750e333f4d0c90c1db",
+  "frozen_at_utc": "2026-09-13T13:29:53.248198+00:00",
+  "source_hashes": {
+    "experiments/E003/actions.py": "889bf4ef2966742c104c2365456b266213d1336aa77505941ab3a00a4144b3db",
+    "experiments/E003/evaluate.py": "c931636bed5e3e288f09230806dedfd42a7c1c704852497f768def3b9637e57d",
+    "experiments/E003/INITIAL_CHOICES.json": "0ecadfaaf57b60e9761be6b4107b8d0e319451e8c06b9b443f07d68e46b90d73",
+    "experiments/E003/SOURCE_OBSERVATION.json": "b25bb3bcece2cc9a317c6f9264f7505b4020e1c1e735cc0c19af5e79f5f522e9"
+  },
+  "first_evaluation_has_run": false
+}
