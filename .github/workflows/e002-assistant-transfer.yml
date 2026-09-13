@@ -1,0 +1,65 @@
+name: E002 assistant artifact transfer
+on:
+  push:
+    branches: [research/e002-assistant-transfer-v01]
+    paths:
+      - 'experiments/E002/**'
+      - 'tests/test_e002.py'
+      - '.github/workflows/e002-assistant-transfer.yml'
+permissions:
+  contents: read
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch frozen public source
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin https://github.com/Valon-Jang/Goal-Directed-Self-Structuring-AI.git
+          git fetch --depth=1 origin "$TEST_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Regression and exact historical SQL preservation
+        run: |
+          mkdir -p e002-evidence
+          python3 - <<'PY'
+          import hashlib, json, pathlib, unittest
+          from benchmarks.e001_tasks import REFERENCE_SQL
+          from experiments.E002.capability import BASE_SQL
+          assert BASE_SQL == REFERENCE_SQL['quality'], 'HISTORICAL_QUERY_CHANGED'
+          result = unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('tests'))
+          data = {'tests_run':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped),'exact_historical_sql_preserved':True,'new_model_api_calls':0}
+          pathlib.Path('e002-evidence/tests.json').write_text(json.dumps(data, indent=2))
+          print('E002_TESTS', json.dumps(data))
+          assert result.testsRun >= 95 and result.wasSuccessful()
+          PY
+      - name: Generate post-freeze instances and execute all software conditions
+        run: |
+          python3 -m experiments.E002.study --seed "$GITHUB_RUN_ID" --count 12 --out e002-evidence/result.json
+          python3 - <<'PY'
+          import json, pathlib, hashlib
+          from experiments.E002.study import make_case, oracle, SCENARIOS, encoded
+          r=json.loads(pathlib.Path('e002-evidence/result.json').read_text())
+          # Preserve actual inputs/expected outputs separately from the capability.
+          cases=[{'input':make_case(s,r['seed'],i),'expected':oracle(make_case(s,r['seed'],i))} for s in SCENARIOS for i in range(12)]
+          pathlib.Path('e002-evidence/cases.json').write_bytes(encoded(cases))
+          paths=list(pathlib.Path('experiments/E002').glob('*.py'))+[pathlib.Path('tests/test_e002.py'),pathlib.Path('experiments/E002/PROTOCOL.md'),pathlib.Path('.github/workflows/e002-assistant-transfer.yml')]
+          pins={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+          pathlib.Path('e002-evidence/source-sha256.json').write_text(json.dumps(pins,indent=2))
+          print('E002_EVIDENCE_FILES',json.dumps({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in pathlib.Path('e002-evidence').glob('*.json')}))
+          # A research result is preserved even when a candidate fails; status is not rewritten.
+          a=r['summary']['ADAPTED_REUSE']
+          ok=a['correct_handling']==96 and a['correct_complete']==72 and a['blocked']==24 and a['silent_errors']==0 and a['input_mutations']==0 and a['exceptions']==0
+          print('E002_CANDIDATE_SCOPED_GATE', 'PASS' if ok else 'FAIL')
+          if not ok: raise SystemExit(1)
+          PY
+      - name: Preserve full synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: e002-evidence-${{ github.run_id }}
+          path: e002-evidence/
+          if-no-files-found: error
+          retention-days: 90
