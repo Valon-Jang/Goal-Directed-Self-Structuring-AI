@@ -1,0 +1,50 @@
+name: E001 E01 bounded CPU smoke
+on:
+  push:
+    branches: [research/e001-goal-vs-human-v01]
+    paths:
+      - '.github/workflows/e001-cpu-smoke.yml'
+      - 'experiments/E001/E01_RUN_REQUEST.json'
+permissions:
+  contents: read
+concurrency:
+  group: e001-e01-cpu-smoke
+  cancel-in-progress: false
+jobs:
+  smoke:
+    if: github.repository == 'Valon-Jang/Goal-Directed-Self-Structuring-AI'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 13
+    steps:
+      - name: Fetch exact public source without credentials
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin https://github.com/Valon-Jang/Goal-Directed-Self-Structuring-AI.git
+          git fetch --depth=1 origin "$TEST_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Run all instrumentation tests before any model acquisition
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib, platform, unittest
+          result = unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('tests'))
+          print('E01_TEST_RESULT ' + json.dumps({'tests_run': result.testsRun, 'failures': len(result.failures), 'errors': len(result.errors), 'skipped': len(result.skipped), 'python': platform.python_version(), 'real_model_calls_in_tests': 0, 'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(pathlib.Path('tests').glob('test_e001*.py'))}}))
+          if result.testsRun < 58 or not result.wasSuccessful():
+              raise SystemExit(1)
+          PY
+      - name: Execute three fresh-process developmental tasks with public pinned model
+        run: |
+          timeout --signal=TERM --kill-after=5s 660s python3 -m implementations.e001_cpu_smoke --execute --out e01-output
+      - name: Summarize available evidence even after a failure
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          path=pathlib.Path('e01-output/report.json')
+          if path.exists():
+              data=json.loads(path.read_text())
+              print('E01_TERMINAL_STATUS', data['status'], 'stage=', data['stage'], 'attempted_calls=', data['real_model_calls_attempted'], 'completed_responses=', data['real_model_responses_completed'])
+          else:
+              print('E01_TERMINAL_STATUS NO_TERMINAL_REPORT; inspect tests/deadlines; do not infer model quality')
+          PY

@@ -1,0 +1,42 @@
+{
+  "experiment": "E001",
+  "version": "0.1-design",
+  "primary_enabled": false,
+  "runtime": {
+    "model_snapshot": null,
+    "backend_revision": null,
+    "reasoning_configuration": null,
+    "inference_configuration": null,
+    "adapter_validation_sha256": null,
+    "independent_contexts_verified": false,
+    "hard_budget_enforcement_verified": false
+  },
+  "fact_parity_reviewed": false,
+  "human_time_capture_validated": false,
+  "heldout_manifest_sha256": null,
+  "pilot_design": {
+    "fresh_task_pairs": 12,
+    "repeats": 3,
+    "arms": ["BARE-GOAL", "HUMAN-GUIDED"],
+    "phases": ["A", "B-warm", "B-cold"],
+    "planned_trajectories": 216,
+    "completed_trajectories": 0,
+    "independent_task_units": 12,
+    "randomization_seed": null
+  },
+  "budget_ceiling": {
+    "currency": "USD",
+    "total_study_cash": null,
+    "per_episode_cash": null,
+    "per_episode_model_calls": null,
+    "per_episode_model_tokens": null,
+    "per_episode_wall_seconds": null,
+    "per_episode_tool_actions": 40
+  },
+  "cost_accounting": {
+    "pricing_snapshot": null,
+    "human_hourly_rate_scenarios": [],
+    "amortization_uses": [1, 10, 100]
+  },
+  "notice": "No endpoint or credential is configured. Null means unmeasured/unresolved, not zero. Never commit secrets or real participant identifiers. Fields are declarations, not proof that the referenced controls have been tested."
+}
