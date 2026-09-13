@@ -25,6 +25,10 @@ Current next candidate: E004 evidence discovery. Can the assistant identify the 
 
 Still pending independently: E001-E0.2's 24 diagnostic model trajectories; authentic human method provenance and whole-human-time collection; the 216-trajectory primary BARE-GOAL/HUMAN-GUIDED pilot. No completed result may be inferred for those lanes.
 
+## Decision retention — NTR-001
+
+The owner requires material choices not taken by BOTH the user and the assistant to be recorded. Read docs/DECISION_RECORDS.md before the next consequential decision and matching entries in docs/DECISIONS.md before re-proposing an option. Non-adoption, deferral, no decision and non-execution are distinct. The register is a partial source-grounded retrospective audit, not a rewrite of old experiments. It also distinguishes the separate E003-SD (PR #4) and E003-SJ (PR #3) scopes; neither an open PR nor the current routing choice establishes owner rejection of another study. No new experiment was run for this rule update.
+
 ## Execution
 
 Researcher workflow: retrieve current evidence -> pick one consequential uncertainty -> freeze a fair bounded test -> execute within real capabilities -> preserve negative results and limitations -> update this entry point. No unattended loop or scheduled work has been installed. No extra user testing should be requested when the available tools can resolve the question directly.
