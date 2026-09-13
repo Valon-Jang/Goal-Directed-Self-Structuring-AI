@@ -1,0 +1,17 @@
+{
+  "schema": "GDSSA_E003_INPUT_ORACLE_FREEZE_V1",
+  "preregistration_commit": "30fc0bf8c6663edd5bf3a4bc930ec1fc9ec14d50",
+  "frozen_at_utc": "2026-09-13T13:25:48.817333+00:00",
+  "source_hashes": {
+    "experiments/E003/casepack.py": "2b26b2c8583470d94a675b548b9500429895a5b06dd59735498eee8ff38d38bb",
+    "experiments/E003/cases.json": "55792e4aec65aed07e22904bb1d39d8e8bc5f5320ab65cc840097a739c329c74",
+    "experiments/E003/oracle.py": "ca76a2dcaa93f448a182fb2437bc4b33d3f3b829ae90893cd1b16a5a8a2a060f",
+    "experiments/E003/sources/metric-definition.json": "a35328567e71fc8374bcca11345c0b6764a7f56434b2318b34bd86a5bf029bee",
+    "experiments/E002/capability.py": "c805556842624ee18b306ae8561a559777f1cea401524118cc277cde19dd645e"
+  },
+  "cases": 12,
+  "case_design": "self_authored_known_diagnostic_vignettes_no_statistical_holdout",
+  "decisions_recorded": 0,
+  "outcome_evaluation_runs": 0,
+  "oracle_executed": false
+}
