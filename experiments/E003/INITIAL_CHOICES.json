@@ -1,0 +1,25 @@
+{
+  "schema":"GDSSA_E003_ACTUAL_ASSISTANT_CHOICES_V1",
+  "input_freeze_commit":"9b1b0117edf31a23228c35436206687efcdf10ea",
+  "subject":"current interactive assistant",
+  "identity_label":"GPT-6 Astra Pro",
+  "exact_backend_snapshot":null,
+  "same_context_researcher_and_subject":true,
+  "independent_model_trials":0,
+  "outcomes_seen_at_commit":false,
+  "choices":[
+    {"id":"SJ01","intervention":"REUSE","route":"e002","evidence":["policy.metric","policy.selection","payload.report_title"],"justification":"Only the report title changed; the existing input and metric contracts remain applicable."},
+    {"id":"SJ02","intervention":"REUSE","route":"e002","evidence":["policy.selection","payload.rows.approved","payload.rows.effective_day"],"justification":"The already-available E002 implementation supports this eligibility policy; no new eligibility code is warranted."},
+    {"id":"SJ03","intervention":"ADAPT_INPUT","route":"e002","operations":["normalize_cartons"],"evidence":["policy.checked_unit","policy.units_per_carton"],"justification":"Convert each inspection's checked cartons to units using its supplied factor; retain the aggregation."},
+    {"id":"SJ04","intervention":"ASK_AUTHORITY","route":"ask","key":"units_per_carton","question":"How many inspected units does one carton represent in this lot? Please provide the authoritative capacity.","evidence":["policy.checked_unit","policy.units_per_carton"],"justification":"The denominator cannot be determined from carton counts without a capacity; no available source supplies it."},
+    {"id":"SJ05","intervention":"ADAPT_INPUT","route":"e002","operations":["rename_columns"],"evidence":["policy.column_map","policy.metric"],"justification":"The explicit one-to-one field map changes representation, not inspection or metric meaning."},
+    {"id":"SJ06","intervention":"ADAPT_OUTPUT","route":"e002","output":"ppm_from_counts","evidence":["goal","policy.metric"],"justification":"Compute ppm from the retained failed/checked totals, not by multiplying the six-decimal rounded percentage."},
+    {"id":"SJ07","intervention":"REPLACE_AGGREGATION","route":"macro","evidence":["goal","policy.metric","policy.selection"],"justification":"Equal inspection weighting is not the pooled ratio. Preserve record selection, replace the aggregation."},
+    {"id":"SJ08","intervention":"REPLACE_AGGREGATION","route":"distinct_units","evidence":["policy.legacy_failed_meaning","unit_register","defect_events"],"justification":"Event counts cannot stand in for distinct defective units; use the available unit identities rather than the lossy summary."},
+    {"id":"SJ09","intervention":"READ_EVIDENCE","route":"read_document","document_id":"metric-definition","evidence":["documents"],"justification":"A listed approved definition can resolve the missing metric, so asking a human now is unnecessary."},
+    {"id":"SJ10","intervention":"ASK_AUTHORITY","route":"ask","key":"metric_definition","question":"Which current definition governs this report: pooled defective-unit percentage or equal-weighted inspection percentage?","evidence":["policy.competing_definitions","policy.metric","goal"],"justification":"The two live definitions have equal authority and differ in meaning; choosing one would invent a priority."},
+    {"id":"SJ11","intervention":"ADAPT_BINDING","route":"e002","operations":["bind_authoritative_contract"],"evidence":["policy.selection","policy.cache_tag_authority","payload.contract"],"justification":"Bind the existing implementation to the current authoritative eligibility policy instead of trusting an obsolete export hint."},
+    {"id":"SJ12","intervention":"REUSE","route":"e002","evidence":["goal","payload.rows"],"justification":"Zero checked units has a defined null result and is already supported; it is not missing information."}
+  ],
+  "notice":"These are observable choices with short public justifications, not private reasoning. Cases and oracle were authored by the same assistant; committing before scoring does not make the study blind. The document-reading choice requires a recorded observation and follow-up commitment. Synthetic questions are not real human participant interactions."
+}

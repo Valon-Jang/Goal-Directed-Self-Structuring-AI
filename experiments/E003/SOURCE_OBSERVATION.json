@@ -1,0 +1,13 @@
+{
+  "schema":"GDSSA_E003_SOURCE_OBSERVATION_V1",
+  "initial_choice_commit":"2fdf5e436ec7084e7ccfb49447cabf7d36f50a5a",
+  "case_id":"SJ09",
+  "requested_document_id":"metric-definition",
+  "read_operation":"container cat experiments/E003/sources/metric-definition.json",
+  "document_sha256":"a35328567e71fc8374bcca11345c0b6764a7f56434b2318b34bd86a5bf029bee",
+  "observation":{"id":"metric-definition","authority":"task_owner","status":"approved","metric":"macro_percent","zero_rule":"exclude_zero_checked_inspections; null if no eligible rate"},
+  "followup_choice":{"id":"SJ09","intervention":"REPLACE_AGGREGATION","route":"macro","evidence":["documents.metric-definition.metric","documents.metric-definition.zero_rule"],"justification":"The retrieved approved definition requires equal inspection weighting. Keep current-record selection, replace the pooled aggregation and exclude zero-denominator inspections from the mean."},
+  "outcomes_seen_at_commit":false,
+  "human_contact_performed":false,
+  "limitation":"This is a real tool read of a synthetic document authored earlier by the same assistant, not an independent external-source discovery or a blind information-acquisition trial."
+}

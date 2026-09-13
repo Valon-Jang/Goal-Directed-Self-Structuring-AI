@@ -1,0 +1,21 @@
+{
+  "schema":"GDSSA_E003_FIRST_LOCAL_SUMMARY_V1",
+  "execution_freeze_commit":"18a7cdd3675a3d5f3eb8f8b33cfb978f357fca80",
+  "case_decisions":12,
+  "followup_decisions":1,
+  "correct_completed":10,
+  "correctly_pending_human_fact":2,
+  "incorrect_or_unresolved":0,
+  "input_mutations":0,
+  "exceptions":0,
+  "negative_controls_rejected":6,
+  "source_or_choice_repair_after_scoring":false,
+  "local_new_tests_passed":16,
+  "deterministic_outputs_sha256":"3c404ac3d768d505c1090b23f1c7dd7986c8f419de58baeafce17fa4822930b1",
+  "independent_model_trials":0,
+  "actual_human_responses":0,
+  "human_total_active_seconds":null,
+  "total_cost":null,
+  "evidence_class":"OPEN_LABEL_CURRENT_ASSISTANT_DECISION_AND_ARTIFACT_STUDY",
+  "notice":"The first full local result is preserved in the session evidence package. Hosted replay must reproduce this output commitment; it is not extra independent evidence."
+}

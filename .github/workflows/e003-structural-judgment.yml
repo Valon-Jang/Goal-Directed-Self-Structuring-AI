@@ -1,0 +1,71 @@
+name: E003 structural judgment replay
+on:
+  push:
+    branches: [research/e003-structural-judgment-v01]
+    paths: ['experiments/E003/**', 'tests/test_e003.py', '.github/workflows/e003-structural-judgment.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.repository == 'Valon-Jang/Goal-Directed-Self-Structuring-AI'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact public source
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin https://github.com/Valon-Jang/Goal-Directed-Self-Structuring-AI.git
+          git fetch --depth=1 origin "$TEST_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Materialize precommitted cases and verify all source commitments
+        run: |
+          python3 -m experiments.E003.casepack
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          for name in ['INPUT_FREEZE','EXECUTION_FREEZE']:
+            manifest=json.loads(pathlib.Path(f'experiments/E003/{name}.json').read_text())
+            for path,pin in manifest['source_hashes'].items():
+              assert hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()==pin, path
+          print('E003_ALL_SOURCE_COMMITMENTS_MATCH')
+          PY
+      - name: Run all inherited and new regression checks
+        run: |
+          mkdir -p e003-evidence
+          python3 - <<'PY'
+          import json,pathlib,unittest
+          result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('tests'))
+          data={'tests_run':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped)}
+          pathlib.Path('e003-evidence/tests.json').write_text(json.dumps(data,indent=2))
+          print('E003_TESTS',json.dumps(data))
+          assert result.testsRun>=111 and result.wasSuccessful()
+          PY
+      - name: Replay committed choices and structural witnesses
+        run: |
+          python3 -m experiments.E003.evaluate --out e003-evidence/result.json
+          python3 -m experiments.E003.witnesses --out e003-evidence/witnesses.json
+          python3 - <<'PY'
+          import hashlib,json,pathlib,os,zipfile
+          result=json.loads(pathlib.Path('e003-evidence/result.json').read_text())
+          first=json.loads(pathlib.Path('evidence/E003/FIRST_LOCAL_SUMMARY.json').read_text())
+          assert result['deterministic_outputs_sha256']==first['deterministic_outputs_sha256']
+          assert all(result['negative_control_rejections'].values())
+          paths=list(pathlib.Path('experiments/E003').rglob('*'))+[pathlib.Path('experiments/E002/capability.py'),pathlib.Path('tests/test_e003.py')]
+          paths=[p for p in paths if p.is_file() and '__pycache__' not in str(p)]
+          with zipfile.ZipFile('e003-evidence/frozen-source-and-cases.zip','w',zipfile.ZIP_DEFLATED) as z:
+            for p in paths:z.write(p,str(p))
+          pins={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+          pathlib.Path('e003-evidence/source-sha256.json').write_text(json.dumps(pins,indent=2))
+          meta={'head_sha':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'output_commitment':result['deterministic_outputs_sha256'],'file_sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in pathlib.Path('e003-evidence').glob('*') if p.is_file()}}
+          pathlib.Path('e003-evidence/verification.json').write_text(json.dumps(meta,indent=2))
+          print('E003_VERIFICATION',json.dumps(meta))
+          PY
+      - name: Preserve actual synthetic outputs and exact sources
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: e003-evidence-${{ github.run_id }}
+          path: e003-evidence/
+          if-no-files-found: error
+          retention-days: 90
