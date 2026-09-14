@@ -1,0 +1,31 @@
+{
+  "schema": "GDSSA_E002_DEVELOPMENT_V1",
+  "preregistration_commit": "99a56dcdeef2c8a5724e122e156fb1780a58fb6c",
+  "source_parent_commit": "902f10de6d0ca3571b36aa726d8714b55b7e0aaf",
+  "phase": "PRE_FREEZE_DEVELOPMENT",
+  "seed": 913,
+  "initial_probe": {
+    "case_instances": 8,
+    "software_conditions": ["BLIND_REUSE", "CONTRACT_GATED_REUSE"],
+    "artifact_invocations": 16,
+    "blind_correct_complete": 2,
+    "blind_silent_errors": 6,
+    "gated_correct_complete": 1,
+    "gated_blocked": 2,
+    "gated_declined_resolvable": 5,
+    "gated_silent_errors": 0,
+    "input_mutations": 0,
+    "input_suite_sha256": "bbba2d1124d8485d9d6f10b222de1410b0558f9e3818f6bc18c72a9cf2444587",
+    "deterministic_records_sha256": "a053276664d88c768085e7ad4b3173d6eb0fc8a6e26e2c643cbd79ad545830f0"
+  },
+  "local_unit_tests": {"run": 26, "failed": 0, "errors": 0, "skipped": 0},
+  "chronology_note": "All three software conditions, including the anticipated adapter, were authored before the initial two-condition development probe. The adapter was then exercised on seed 913 in unit tests. It was not newly invented after seeing that probe. The preregistered B-stage narrative is therefore not a literal blind discovery sequence; C-stage code freeze still precedes the main instance slice.",
+  "local_runtime": {"python": "3.13.5", "sqlite": "3.46.1"},
+  "local_source_sha256": {
+    "capability.py": "c805556842624ee18b306ae8561a559777f1cea401524118cc277cde19dd645e",
+    "study.py": "559798e77b2cc9296febaf2a1dce0e022d75c08715123cf6ba409dcd3d3fbd45"
+  },
+  "independent_model_trials": 0,
+  "human_time_seconds": null,
+  "interpretation": "Open-label software development and grader tests only. No model improvement, human-guidance effect or independent held-out evidence."
+}
